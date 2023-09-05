@@ -1,9 +1,7 @@
 function CreateButton(){
     for(var l of [...document.querySelectorAll(".jobs-save-button")]){
-       // console.log(l);
         let b=document.createElement("button");
         b.style="padding:10px 17px;font-family: Arial, sans-serif; color: #ffffff; background-color: #0a66c2; border: none; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px; margin-left: 8px";
-        //b.class="job-s-apply"
         b.innerHTML="Generate Cover Letter"
         b.addEventListener('mouseenter', function(event) {
             b.style.backgroundColor="#004182";
@@ -13,7 +11,7 @@ function CreateButton(){
         });
         b.id="CoverLetterGeneratorButton";
         b.onclick=function(){
-            console.log(window.open(appendQueryParameters("https://www.ourwebsite.com",GetAllInfo())))
+            console.log(window.open(getQueryURL("https://www.ourwebsite.com",GetAllInfo())))
         };
         if(l.nextElementSibling!=null){
             l.parentElement.insertBefore(b,l.nextElementSibling);
@@ -53,18 +51,13 @@ function GetAllInfo(){
 }
 
 
-function appendQueryParameters(url,params) {
+function getQueryURL(url,params) {
     const query = Object.keys(params).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`).join('&');
     if (url.indexOf('?') == -1)
       return `${url}?${query}`;
     else 
       return `${url}&${query}`;
 }
-
-
-    
-
-
 
 CreateButton();
 

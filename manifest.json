@@ -9,22 +9,8 @@
       "run_at":"document_idle"
     }
   ],
-  "browser_action":{
-      "browser_style":true,
-      "default_icon":{
-          "96":"images/96x96.png"
-      },
-      "default_title":"Instructure Quizlet",
-      "default_popup":"Popup/PopupV5.html"
-  },
   "permissions":[
       "<all_urls>",
-      "webNavigation",
-      "tabs",
-      "storage",
-      "webRequest",
-      "clipboardRead",
-      "clipboardWrite"
-
+      "webNavigation"
   ]
 }
