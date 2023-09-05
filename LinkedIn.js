@@ -1,30 +1,39 @@
 function CreateButton(){
-    for(var l of [...document.querySelectorAll(".jobs-save-button")]){
-        let b=document.createElement("button");
-        b.style="padding:10px 17px;font-family: Arial, sans-serif; color: #ffffff; background-color: #0a66c2; border: none; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px; margin-left: 8px";
-        b.innerHTML="Generate Cover Letter"
-        b.addEventListener('mouseenter', function(event) {
-            b.style.backgroundColor="#004182";
-        });
-        b.addEventListener('mouseleave', function(event) {
-            b.style.backgroundColor="#0a66c2";
-        });
-        b.id="CoverLetterGeneratorButton";
-        b.onclick=function(){
-            console.log(window.open(getQueryURL("https://www.ourwebsite.com",GetAllInfo())))
-        };
-        if(l.nextElementSibling!=null){
-            l.parentElement.insertBefore(b,l.nextElementSibling);
-            b.style.margin="0px";
-        }else
-            l.parentElement.appendChild(b)
+    let saveButtons=[...document.querySelectorAll(".jobs-save-button")];
+    for(var saveButtonIndex in saveButtons){
+        let l=saveButtons[saveButtonIndex];
+        let id=l.className.replaceAll(" ","");
+        if(document.getElementById(id)==null){
+            let b=document.createElement("button");
+            b.style="padding:10px 17px;font-family: Arial, sans-serif; color: #ffffff; background-color: #0a66c2; border: none; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px; margin-left: 8px";
+            b.innerHTML="Generate Cover Letter"
+            b.id=id;
+            b.addEventListener('mouseenter', function(event) {
+                b.style.backgroundColor="#004182";
+            });
+            b.addEventListener('mouseleave', function(event) {
+                b.style.backgroundColor="#0a66c2";
+            });
+            b.onclick=function(){
+                let info=GetAllInfo();
+                console.log(info);
+                window.open(getQueryURL("https://www.ourwebsite.com",info));
+            };
+            if(l.nextElementSibling!=null){
+                l.parentElement.insertBefore(b,l.nextElementSibling);
+                b.style.margin="0px";
+            }else
+                l.parentElement.appendChild(b)
+
+            console.log("GPT Button Added");
+        }
     }
 }
 
 
 
 function GetJobTitle(){
-    let t=document.getElementById("ember41");
+    let t=document.querySelector(".jobs-unified-top-card__job-title");
     if(t!=null)
         return t.innerText;
     return null;
@@ -36,7 +45,7 @@ function GetCompany(){
     return null;
 }
 function GetDescription(){
-    let jd=document.querySelector(".jobs-description");
+    let jd=document.querySelector(".jobs-description article");
     if(jd!=null)
         return jd.innerText;
     return null;
@@ -61,3 +70,10 @@ function getQueryURL(url,params) {
 
 CreateButton();
 
+new MutationObserver(function(mutations,observer){
+    for (const mutation of mutations) 
+        if (mutation.type == 'childList' && [...document.querySelectorAll(".jobs-save-button")].length>0){
+            CreateButton();
+            observer.disconnect();
+        }
+}).observe(document.body, { childList: true, subtree: true });
