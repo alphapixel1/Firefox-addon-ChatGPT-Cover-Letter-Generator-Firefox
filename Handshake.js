@@ -9,13 +9,21 @@ let PageInfo={
         style:"padding:9px 20px;font-size:18px;font-weight:700;font-family: Arial, sans-serif; color: #ffffff; background-color: #190083; border: none; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px; margin-left: 8px",
         hover:"#100056",//hover color
         leave:"#190083",//leave color
-        //margin:"10px",
     },
+    /*addButtonData:{
+        getIdForButton:(l)=>l.className.replaceAll(" ",""),
+        getButtons:()=>[...document.querySelectorAll(".jobs-save-button")],
+    },*/
     info:{
         getTitle:()=>nullCheck(document.querySelector(".style__job-title___P7PJV")),
         getCompany:()=>nullCheck(document.querySelector(".style__employer-name___54lqg")),
         getDescription:()=>nullCheck(document.querySelector(".style__margin-control___Cfd0z"))
-    }
+    },
+    /*sideBarInfo:{
+        sideBarStartsWith:"https://www.linkedin.com/jobs/search",
+        nonSideBarStartsWith:"https://www.linkedin.com/jobs/view/",
+        getSideBar:()=>document.querySelector(".scaffold-layout__detail.overflow-x-hidden.jobs-search__job-details")
+    }*/
 }
 function GetAllInfo(){
     return {

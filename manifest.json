@@ -12,6 +12,11 @@
       "matches":["https://app.joinhandshake.com/stu/jobs/*","https://app.joinhandshake.com/stu/postings*"],
       "js":["Handshake.js"],
       "run_at":"document_idle"
+    },
+    {
+      "matches":["https://www.indeed.com/*"],
+      "js":["Indeed.js"],
+      "run_at":"document_idle"
     }
   ],
   "permissions":[

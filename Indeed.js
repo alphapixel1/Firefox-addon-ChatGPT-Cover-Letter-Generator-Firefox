@@ -3,13 +3,6 @@ function nullCheck(element){
         return null;
     return element.innerText;
 }
-function getQueryURL(url,params) {
-    const query = Object.keys(params).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`).join('&');
-    if (url.indexOf('?') == -1)
-      return `${url}?${query}`;
-    else 
-      return `${url}&${query}`;
-}
 function GetAllInfo(){
     return {
         "Company":PageInfo.info.getCompany(),
@@ -25,33 +18,13 @@ function CreateButton(){
     b.addEventListener('mouseleave', ()=>b.style.backgroundColor=PageInfo.button.leave);
     return b;
 }
-
-
-let PageInfo={
-    startsWith:"https://www.linkedin.com",
-    button:{
-        style:"padding:10px 17px;font-family: Arial, sans-serif; color: #ffffff; background-color: #0a66c2; border: none; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px; margin-left: 8px",
-        hover:"#004182",//hover color
-        leave:"#0a66c2",//leave color
-        //margin:"10px",
-    },
-    addButtonData:{
-        getIdForButton:(l)=>l.className.replaceAll(" ",""),
-        getButtons:()=>[...document.querySelectorAll(".jobs-save-button")],
-    },
-        
-    info:{
-        getTitle:()=>nullCheck(document.querySelector(".jobs-unified-top-card__job-title")),
-        getCompany:()=>nullCheck(document.querySelector(".jobs-unified-top-card__primary-description a")),
-        getDescription:()=>nullCheck(document.querySelector(".jobs-description article"))
-    },
-    sideBarInfo:{
-        sideBarStartsWith:"https://www.linkedin.com/jobs/search",
-        nonSideBarStartsWith:"https://www.linkedin.com/jobs/view/",
-        getSideBar:()=>document.querySelector(".scaffold-layout__detail.overflow-x-hidden.jobs-search__job-details")
-    }
-};
-
+function getQueryURL(url,params) {
+    const query = Object.keys(params).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`).join('&');
+    if (url.indexOf('?') == -1)
+      return `${url}?${query}`;
+    else 
+      return `${url}&${query}`;
+}
 function AddButton(){
     let saveButtons=PageInfo.addButtonData.getButtons();
     let buttonsMade=0;
@@ -83,9 +56,40 @@ function AddButton(){
 
 
 
+let PageInfo={
+    startsWith:"https://www.indeed.com",
+    button:{
+        style:"cursor:pointer;padding: 12px 15px; font-family: Arial, sans-serif; color: rgb(255, 255, 255); background-color: rgb(37, 87, 167); border: medium; border-radius: 8px; margin-left: 16px; font-size: 16px; font-weight: 700; vertical-align:top",
+        hover:"#164081",//hover color
+        leave:"#2557a7",//leave color
+    },
+    addButtonData:{
+        getIdForButton:(l)=>"CoverLetterGenerator",
+        getButtons:()=>{
+            if(document.querySelector(".jobsearch-RightPane")!=null)//test if there is a sidebar
+                return [document.querySelector(".jobsearch-ViewJobButtons-container").lastChild];
+            let container=document.getElementById("saveJobButtonContainer");
+            if(container==null)
+                return [];
+            return [container.firstChild];
+        }
+    },
+        
+    info:{
+        getTitle:()=>nullCheck(document.querySelector(".jobsearch-JobInfoHeader-title")),
+        getCompany:()=>nullCheck(document.querySelector("div[data-testid=inlineHeader-companyName]")),
+        getDescription:()=>nullCheck(document.getElementById("jobDescriptionText"))
+    },
+    sideBarInfo:{
+        sideBarStartsWith:"https://www.indeed.com/jobs",
+        nonSideBarStartsWith:"https://www.indeed.com/viewjob",
+        getSideBar:()=>document.querySelector(".jobsearch-RightPane")
+    }
+};
 
 
-CreateButton();
+
+AddButton();
 let href=window.location.href;
 if(href.startsWith(PageInfo.sideBarInfo.nonSideBarStartsWith)){
     let interval = setInterval(function(){
