@@ -1,11 +1,16 @@
 {
   "manifest_version":2,
-  "name":"Helper",
+  "name":"Cover Letter Generator",
   "version":"1.0.0",
   "content_scripts": [
     {
-      "matches":["https://www.linkedin.com/*"],
+      "matches":["https://www.linkedin.com/jobs/search/*","https://www.linkedin.com/jobs/view/*"],
       "js":["LinkedIn.js"],
+      "run_at":"document_idle"
+    },
+    {
+      "matches":["https://app.joinhandshake.com/stu/jobs/*","https://app.joinhandshake.com/stu/postings*"],
+      "js":["Handshake.js"],
       "run_at":"document_idle"
     }
   ],

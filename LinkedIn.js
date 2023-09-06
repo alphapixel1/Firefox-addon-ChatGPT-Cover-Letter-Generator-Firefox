@@ -1,19 +1,58 @@
+function nullCheck(element){
+    if(element==null)
+        return null;
+    return element.innerText;
+}
+let PageInfo={
+    startsWith:"https://www.linkedin.com",
+    button:{
+        style:"padding:10px 17px;font-family: Arial, sans-serif; color: #ffffff; background-color: #0a66c2; border: none; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px; margin-left: 8px",
+        hover:"#004182",//hover color
+        leave:"#0a66c2",//leave color
+        //margin:"10px",
+    },
+    addButtonData:{
+        getIdForButton:(l)=>l.className.replaceAll(" ",""),
+        getButtons:()=>[...document.querySelectorAll(".jobs-save-button")],
+    },
+        
+    info:{
+        getTitle:()=>nullCheck(document.querySelector(".jobs-unified-top-card__job-title")),
+        getCompany:()=>nullCheck(document.querySelector(".jobs-unified-top-card__primary-description a")),
+        getDescription:()=>nullCheck(document.querySelector(".jobs-description article"))
+    },
+    sideBarInfo:{
+        sideBarStartsWith:"https://www.linkedin.com/jobs/search",
+        nonSideBarStartsWith:"https://www.linkedin.com/jobs/view/",
+        getSideBar:()=>document.querySelector(".scaffold-layout__detail.overflow-x-hidden.jobs-search__job-details")
+    }
+};
+function GetAllInfo(){
+    return {
+        "Company":PageInfo.info.getCompany(),
+        "Title":PageInfo.info.getTitle(),
+        "Description":PageInfo.info.getDescription()
+    };
+}
 function CreateButton(){
-    let saveButtons=[...document.querySelectorAll(".jobs-save-button")];
+    let b=document.createElement("button");
+    b.style=PageInfo.button.style;
+    b.innerHTML="Generate Cover Letter";
+    b.addEventListener('mouseenter', ()=>b.style.backgroundColor=PageInfo.button.hover);
+    b.addEventListener('mouseleave', ()=>b.style.backgroundColor=PageInfo.button.leave);
+    return b;
+}
+
+function AddButton(){
+    let saveButtons=PageInfo.addButtonData.getButtons();
+    let buttonsMade=0;
     for(var saveButtonIndex in saveButtons){
         let l=saveButtons[saveButtonIndex];
-        let id=l.className.replaceAll(" ","");
+        let id=PageInfo.addButtonData.getIdForButton(l);
         if(document.getElementById(id)==null){
-            let b=document.createElement("button");
-            b.style="padding:10px 17px;font-family: Arial, sans-serif; color: #ffffff; background-color: #0a66c2; border: none; -webkit-border-radius: 30px; -moz-border-radius: 30px; border-radius: 30px; margin-left: 8px";
-            b.innerHTML="Generate Cover Letter"
+           var b=CreateButton();
             b.id=id;
-            b.addEventListener('mouseenter', function(event) {
-                b.style.backgroundColor="#004182";
-            });
-            b.addEventListener('mouseleave', function(event) {
-                b.style.backgroundColor="#0a66c2";
-            });
+           
             b.onclick=function(){
                 let info=GetAllInfo();
                 console.log(info);
@@ -24,40 +63,15 @@ function CreateButton(){
                 b.style.margin="0px";
             }else
                 l.parentElement.appendChild(b)
-
             console.log("GPT Button Added");
+            console.log(b,"Button");
+            buttonsMade++;
         }
     }
+    return buttonsMade;
 }
 
 
-
-function GetJobTitle(){
-    let t=document.querySelector(".jobs-unified-top-card__job-title");
-    if(t!=null)
-        return t.innerText;
-    return null;
-}
-function GetCompany(){
-    let c=document.querySelector(".jobs-unified-top-card__primary-description a");
-    if(c!=null)
-        return c.innerText;
-    return null;
-}
-function GetDescription(){
-    let jd=document.querySelector(".jobs-description article");
-    if(jd!=null)
-        return jd.innerText;
-    return null;
-}
-
-function GetAllInfo(){
-    return {
-        "JobTitle":GetJobTitle(),
-        "Company":GetCompany(),
-        "Description":GetDescription()
-    };
-}
 
 
 function getQueryURL(url,params) {
@@ -69,11 +83,26 @@ function getQueryURL(url,params) {
 }
 
 CreateButton();
-
-new MutationObserver(function(mutations,observer){
-    for (const mutation of mutations) 
-        if (mutation.type == 'childList' && [...document.querySelectorAll(".jobs-save-button")].length>0){
-            CreateButton();
-            observer.disconnect();
+let href=window.location.href;
+if(href.startsWith(PageInfo.sideBarInfo.nonSideBarStartsWith)){
+    let interval = setInterval(function(){
+        if(AddButton()>0)
+            clearInterval(interval);
+    },300)
+}else if(href.startsWith(PageInfo.sideBarInfo.sideBarStartsWith)){
+    let sideBarInterval=setInterval(function(){
+        console.log("Side Bar Interval");
+        let sideBar=PageInfo.sideBarInfo.getSideBar();
+        if(sideBar!=null){
+            new MutationObserver(function(mutations,observer){
+                for (const mutation of mutations) 
+                    if (mutation.type == 'childList'){
+                        AddButton();
+                        console.log("Adding button #2")   ;
+                    }
+                    console.log(mutations.type)
+            }).observe(sideBar, { childList: true, subtree: true });
+            clearInterval(sideBarInterval);
         }
-}).observe(document.body, { childList: true, subtree: true });
+    },300);
+}
